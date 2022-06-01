@@ -37,12 +37,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
-  });
+  const newUser = await User.create(req.body);
 
   createSendToken(newUser, 201, res);
 });
@@ -76,6 +71,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
+    console.log(token);
     return next(
       new AppError('You are not logged in! Please log in to get access.', 401)
     );
@@ -111,6 +107,7 @@ exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles ['admin', 'lead-guide']. role='user'
     if (!roles.includes(req.user.role)) {
+      console.log(req.user.role);
       return next(
         new AppError('You do not have permission to perform this action', 403)
       );
