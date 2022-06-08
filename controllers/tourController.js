@@ -1,7 +1,7 @@
 const Tour = require('./../models/tourModel');
 // const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
-// const AppError = require('./../utils/appError');
+const AppError = require('./../utils/appError');
 
 const factory = require('./handlerFactory');
 
@@ -172,3 +172,22 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+// '/tours-within/:distance/center/latlng/:unit'
+// /tours-distance?distance=233&center=-40,45&unit=mi
+// /tours-distance/233/center/-7.058934,107.582017/unit/mi
+exports.getToursWithin = (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+
+  const { lat, lng } = latlng.split(',');
+
+  if (!lat || !lng) {
+    next(new AppError('please provide lat and long in format lat,long.', 404));
+  }
+
+  console.log(distance, lat, lng, unit);
+
+  res.status(200).json({
+    status: 'success'
+  });
+};
